@@ -1,2 +1,1 @@
-# petrovich
-Telegram bot for VK public
+Петрович для Телеграма
