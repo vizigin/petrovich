@@ -45,7 +45,6 @@ def auth(ip_h, lg_h, to):
 
 def get_posts(group_id):
 	response = opener.open( "https://api.vk.com/method/wall.get.json?owner_id=" + str(group_id) )
-	
 	json_response = json.loads(response.read())['response']
 	return json_response
 

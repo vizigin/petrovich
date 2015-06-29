@@ -18,3 +18,5 @@ def send_message_all(text):
 	users = get_users()
 	for user in users:
 		send_message(user, text)
+
+#init_webhook()
