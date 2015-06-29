@@ -26,4 +26,4 @@ heroku logs
 Also you should schedule (I using Heroku Scheduler) VK parser for broadcast posts from your public to users.
 
 This repo used by: 
-* [Banekbot](http://telegram.me/banekbot). Bot for VK [public]https://vk.com/baneks
+* [Banekbot](http://telegram.me/banekbot). Bot for VK [public](https://vk.com/baneks)
