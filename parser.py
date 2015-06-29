@@ -21,6 +21,7 @@ scope = str(config.get("vk_scope"))
 
 password = str(config.get("vk_password"))
 email = str(config.get("vk_email"))
+group_id = str(config.get("vk_group_id"))
 
 opener = urllib2.build_opener( urllib2.HTTPCookieProcessor(cookielib.CookieJar()), urllib2.HTTPRedirectHandler())
 
@@ -42,8 +43,9 @@ def auth(ip_h, lg_h, to):
 	response = opener.open(login_url, urllib.urlencode(params))
 	return response.geturl()
 
-def get_posts(group_id, token):
-	response = opener.open( "https://api.vk.com/method/wall.get.json?owner_id=" + str(group_id) + "&access_token=" + token )
+def get_posts(group_id):
+	response = opener.open( "https://api.vk.com/method/wall.get.json?owner_id=" + str(group_id) )
+	
 	json_response = json.loads(response.read())['response']
 	return json_response
 
@@ -58,11 +60,9 @@ def save_posts(posts):
 			print "Error: Post doesn't have texts"
 	return new_posts
 
-user_id, token = get_token()
-posts = get_posts(-45491419, token)
+#user_id, token = get_token()
+posts = get_posts(group_id)
 new_posts = save_posts(posts)
-
-#broadcast
 for text in new_posts:
 	send_message_all(text)
-	time.sleep(1)
+	time.sleep(2)

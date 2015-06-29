@@ -1,12 +1,11 @@
-# Posts database:
+# Posts table:
+# CREATE SEQUENCE posts_id_seq START 1
+# CREATE TABLE public.posts (id   integer   NOT NULL   PRIMARY KEY DEFAULT nextval('posts_id_seq'),vkpost_id   integer   NOT NULL   UNIQUE,text TEXT)
 #
-# CREATE SEQUENCE posts_id_seq;
-# CREATE TABLE public.posts (
-# 	id   integer   NOT NULL   PRIMARY KEY DEFAULT nextval('posts_id_seq'),
-#	vkpost_id   integer   NOT NULL   UNIQUE,
-#	text TEXT
-# )
-#
+# Users table:
+# CREATE SEQUENCE users_id_seq START 1
+# CREATE TABLE public.users (id   integer   NOT NULL   PRIMARY KEY DEFAULT nextval('users_id_seq'),telegram_id   integer   NOT NULL   UNIQUE)
+
 import psycopg2
 import urlparse
 from config import config
