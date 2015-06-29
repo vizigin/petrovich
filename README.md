@@ -1,4 +1,4 @@
-#Telegram Bot "Petrovich"
+#Telegram Bot Petrovich
 ####Petrovich. Radosti skupyye telegrammy
 A [Telegram](https://telegram.org/) bot running with VK group integration and ready to deploy with Heroku.
 Now bot support sending text message from VK groups only.
@@ -26,4 +26,4 @@ heroku logs
 Also you should schedule (I using Heroku Scheduler) VK parser for broadcast posts from your public to users.
 
 This repo used by: 
-* [Banekbot](http://telegram.me/banekbot). Bot for VK public[https://vk.com/baneks]
+* [Banekbot](http://telegram.me/banekbot). Bot for VK [public]https://vk.com/baneks
