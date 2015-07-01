@@ -1,10 +1,10 @@
 # Posts table:
 # CREATE SEQUENCE posts_id_seq START 1
-# CREATE TABLE public.posts (id   integer   NOT NULL   PRIMARY KEY DEFAULT nextval('posts_id_seq'),vkpost_id   integer   NOT NULL   UNIQUE,text TEXT)
+# CREATE TABLE public.posts (id   integer   NOT NULL   PRIMARY KEY DEFAULT nextval('posts_id_seq'),external_post_id   integer   NOT NULL   UNIQUE,text TEXT)
 #
-# Users table:
-# CREATE SEQUENCE users_id_seq START 1
-# CREATE TABLE public.users (id   integer   NOT NULL   PRIMARY KEY DEFAULT nextval('users_id_seq'),telegram_id   integer   NOT NULL   UNIQUE)
+# Chats table:
+# CREATE SEQUENCE chats_id_seq START 1
+# CREATE TABLE public.chats (id   integer   NOT NULL   PRIMARY KEY DEFAULT nextval('chats_id_seq'),telegram_chat_id   integer   NOT NULL   UNIQUE)
 
 import psycopg2
 import urlparse
@@ -19,36 +19,60 @@ def connect():
 	connection = psycopg2.connect(database = url.path[1:], user = url.username, password = url.password, host = url.hostname, port = url.port)
 	return connection
 
-def insert_user(id):
+def insert_chat(id):
+	if is_chat_exist(id):
+		print('Error: Chat already exist')
+		return False
+
 	c = connect()
-	try:
-		c.cursor().execute("INSERT INTO users(id, telegram_id) VALUES(DEFAULT, %s)", [id])
-		c.commit()
-		c.close()
-		print('Users added')
-		return True
-	except psycopg2.IntegrityError:
-		c.close()
-		print('Error: User already exist')
-		return False;
-	
-def get_users():
+	c.cursor().execute("INSERT INTO chats(id, telegram_chat_id) VALUES(DEFAULT, %s)", [id])
+	c.commit()
+	c.close()
+	print('Chat added')
+	return True
+
+def is_chat_exist(id):
 	c = connect()
 	cursor = c.cursor()
-	cursor.execute("SELECT telegram_id FROM users")
-	users = cursor.fetchall()
+	cursor.execute("SELECT exists(SELECT * FROM chats WHERE telegram_chat_id=%s)", (id,))
+	is_exist = cursor.fetchone()[0]
 	c.close()
-	return users
+	return is_exist
 
-def insert_post(vkpost_id, text):
+def get_chats():
 	c = connect()
-	try:
-		c.cursor().execute("INSERT INTO posts(id, vkpost_id, text) VALUES(DEFAULT, %s, %s)", (vkpost_id, text))
-		c.commit()
-		c.close()
-		print('Post added')
-		return True
-	except psycopg2.IntegrityError:
-		c.close()
+	cursor = c.cursor()
+	cursor.execute("SELECT telegram_id FROM chats")
+	chats = cursor.fetchall()
+	c.close()
+	return chats
+
+def get_random_post():
+	c = connect()
+	cursor = c.cursor()
+	cursor.execute("SELECT COUNT(*) from posts")
+	count = cursor.fetchone()[0]
+	cursor.execute("SELECT text FROM posts OFFSET random()*" + str(count) + " LIMIT 1;")
+	post = cursor.fetchone()[0]
+	c.close()
+	return post
+
+def insert_post(post):
+	if is_post_exist(post["id"]):
 		print('Error: Post already exist')
-		return False;
+		return False
+
+	c = connect()
+	c.cursor().execute("INSERT INTO posts(id, external_post_id, text) VALUES(DEFAULT, %s, %s)", (post["id"], post["text"]))
+	c.commit()
+	c.close()
+	print('Post added')
+	return True
+
+def is_post_exist(id):
+	c = connect()
+	cursor = c.cursor()
+	cursor.execute("SELECT exists(select * from posts where external_post_id=%s)", (id,))
+	is_exist = cursor.fetchone()[0]
+	c.close()
+	return is_exist

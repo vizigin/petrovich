@@ -1,21 +1,16 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*- 
-
 import os
 from bottle import run, request, post
 from config import config
-from db import insert_user
+from db import insert_chat, get_random_post
 from bot import send_message
 
 @post("/")
 def subscribe():
 	# todo: error handler
-	user_id = request.json['message']['from']['id']
-	result = insert_user(user_id)
+	print request.json
+	chat_id = request.json['message']['chat']['id']
+	result = insert_chat(chat_id)
 	if result==True:
-		send_message(user_id, "Привет, любимый! Я буду присылать тебе свежие анекдоты категории Б по мере их появления в сообществе vk.com/baneks")
-	else:
-		send_message(user_id, "Пока мне нечего тебе ответить.\nКак будет новый анекдот — пришлю.")
-
+		send_message(chat_id, str(config.get("hello_message")))
 
 run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
