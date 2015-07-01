@@ -42,7 +42,7 @@ def is_chat_exist(id):
 def get_chats():
 	c = connect()
 	cursor = c.cursor()
-	cursor.execute("SELECT telegram_id FROM chats")
+	cursor.execute("SELECT telegram_chat_id FROM chats")
 	chats = cursor.fetchall()
 	c.close()
 	return chats
