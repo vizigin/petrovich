@@ -55,7 +55,7 @@ class Bot:
 	def send_message_all(self, text):
 		chats = get_chats()
 		for chat in chats:
-			send_message(chat, text)
+			self.send_message(chat, text)
 
 	def send_posts(self, posts):
 		for post in posts:
