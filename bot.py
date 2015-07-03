@@ -2,7 +2,7 @@
 import time
 import urlparse
 import requests
-from db import get_chats, activate, deactivate
+from db import get_chats, activate, deactivate, insert_post
 from config import config
 
 telegram_bot_url = str(config.get("telegram_bot_url"))
@@ -52,13 +52,15 @@ class Bot:
 		params = {'chat_id': chat_id, 'text': text}
 		requests.get( telegram_bot_url + telegram_token + "/sendMessage", params=params )
 
-	def send_posts(self, posts):
-		for post in posts:
-			if insert_post(post) == True:
-				send_message_all(post["text"])
-				time.sleep(5)
-
 	def send_message_all(self, text):
 		chats = get_chats()
 		for chat in chats:
 			send_message(chat, text)
+
+	def send_posts(self, posts):
+		for post in posts:
+			if insert_post(post) == True:
+				self.send_message_all(post["text"])
+				time.sleep(5)
+
+	
