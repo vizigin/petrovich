@@ -9,7 +9,14 @@ config = {
 
     # app
     "type": "rss",
-    "hello_message": "Привет! Я буду присылать тебе свежие новости от Цукерберг Позвонит! По мере их появления на сайте siliconrus.com",
+    "hello_message": "<hello message>",
+
+    #commands
+    "activate_command": "/command1",
+    "deactivate_command": "/command2",
+
+    "activate_message": "<activate_message>",
+    "deactivate_message": "<deactivate_message>",
 
     # vk
     "vk_group_id": "-45491419",

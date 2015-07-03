@@ -7,9 +7,9 @@ import string
 import json
 import time
 import re
-from bot import send_message_all
-from db import insert_post
+from bot import Bot
 from config import config
+from db import insert_post
 
 API_VK_WALL_GET = "https://api.vk.com/method/wall.get.json?owner_id="
 RSS_URL = str(config.get("rss_url"))
@@ -43,17 +43,12 @@ class RSSParser(Parser):
 			try:
 				title = post["title"]
 				link = post["link"]
+				url = urlparse.urlparse(link)
 				description = re.compile(r'<.*?>').sub('', post["description"])
-				text = title + "\n\n" + description + "\n\n" + link
+				text = title + "\n\n" + description + "\n\n" + (url.netloc + url.path + "?from=bot")
 				self.parsed_posts.append( {"id":post["guid"], "text":text} )
 			except TypeError:
 				print "Error: Post doesn't have Text or Id"
-
-def send_posts(posts):
-	for post in posts:
-		if insert_post(post) == True:
-			send_message_all(post["text"])
-			time.sleep(5)
 
 if parse_type =="rss":
 	parser = RSSParser()
@@ -62,4 +57,5 @@ else:
 	parser = VKParser()
 	parser.parse(owner_id)
 
-send_posts(parser.parsed_posts)
+bot = Bot()
+bot.send_posts(parser.parsed_posts)
