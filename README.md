@@ -1,7 +1,7 @@
 # Telegram Bot Petrovich
 #### Petrovich. Radosti skupyye telegrammy
-A [Telegram](https://telegram.org/) bot running with VK group integration and ready to deploy with Heroku.
-Now bot supports sending text message from VK groups only.
+A [Telegram](https://telegram.org/) bot running with RSS and VK group integration and ready to deploy with Heroku.
+Now bot supports sending text message from RSS and VK groups only.
 
 ### Installation
 1. Clone this repo
@@ -27,3 +27,4 @@ Also you should schedule (I using Heroku Scheduler) VK parser for broadcast post
 
 This repo used by: 
 * [Banekbot](http://telegram.me/banekbot). Bot for VK [public](https://vk.com/baneks)
+* [SMMRussiabot](http://telegram.me/smmrussiabot). Bot for RSS [site](http://siliconrus.com)

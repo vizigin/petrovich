@@ -19,6 +19,29 @@ def connect():
 	connection = psycopg2.connect(database = url.path[1:], user = url.username, password = url.password, host = url.hostname, port = url.port)
 	return connection
 
+def activate(id):
+	print "activate"
+	c = connect()
+	c.cursor().execute("UPDATE chats SET active=TRUE WHERE telegram_chat_id=%s", [id])
+	c.commit()
+	c.close()
+
+def deactivate(id):
+	print "deactivate"
+	c = connect()
+	c.cursor().execute("UPDATE chats SET active=FALSE WHERE telegram_chat_id=%s", [id])
+	c.commit()
+	c.close()
+
+def is_active(id):
+	c = connect()
+	cursor = c.cursor()
+	cursor.execute("SELECT active FROM chats WHERE telegram_chat_id=%s", [id])
+	c.commit()
+	is_active = cursor.fetchone()[0]
+	c.close()
+	return is_active
+
 def insert_chat(id):
 	if is_chat_exist(id):
 		print('Error: Chat already exist')
