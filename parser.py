@@ -9,7 +9,6 @@ import time
 import re
 from bot import Bot
 from config import config
-from db import insert_post
 
 API_VK_WALL_GET = "https://api.vk.com/method/wall.get.json?owner_id="
 RSS_URL = str(config.get("rss_url"))
