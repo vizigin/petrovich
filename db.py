@@ -40,6 +40,8 @@ def is_active(id):
 	c.commit()
 	is_active = cursor.fetchone()[0]
 	c.close()
+	print(id)
+	print(is_active)
 	return is_active
 
 def insert_chat(id):
@@ -65,7 +67,7 @@ def is_chat_exist(id):
 def get_chats():
 	c = connect()
 	cursor = c.cursor()
-	cursor.execute("SELECT telegram_chat_id FROM chats")
+	cursor.execute("SELECT telegram_chat_id FROM chats WHERE active=True")
 	chats = cursor.fetchall()
 	c.close()
 	return chats

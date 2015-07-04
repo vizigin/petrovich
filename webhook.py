@@ -21,7 +21,7 @@ def subscribe():
 	except KeyError:
 		print "Nothing to command"
 
-	if is_active(chat_id):
+	if is_active(chat_id) == True:
 		if is_added == True:
 			bot.send_message(chat_id, str(config.get("hello_message")))
 		else:

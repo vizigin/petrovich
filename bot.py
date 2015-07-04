@@ -41,9 +41,7 @@ class Bot:
 		requests.get( telegram_bot_url + telegram_token + "/setWebhook", params={'url': heroku_url} )
 
 	def execute(self, command_name, chat_id):
-		print command_name
 		for command in self.commands:
-			print command.name
 			if command.name == command_name:
 				command.run(chat_id)
 				return;
@@ -62,5 +60,3 @@ class Bot:
 			if insert_post(post) == True:
 				self.send_message_all(post["text"])
 				time.sleep(5)
-
-	
