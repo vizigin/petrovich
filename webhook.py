@@ -12,6 +12,7 @@ bot = Bot()
 def subscribe():
 	# todo: error handler
 	chat_id = request.json['message']['chat']['id']
+	is_added = insert_chat(chat_id)
 
 	try:
 		command_text = parse_command(request.json['message']['text'])
@@ -21,7 +22,7 @@ def subscribe():
 		print "Nothing to command"
 
 	if is_active(chat_id):
-		if insert_chat(chat_id):
+		if is_added == True:
 			bot.send_message(chat_id, str(config.get("hello_message")))
 		else:
 			bot.send_message(chat_id, "Вот тебе баян:\n" + get_random_post()) 
