@@ -1,11 +1,12 @@
 config = {
     # heroku
-    "heroku_postgres_key": "<here your bot token>",
+    "heroku_postgres_key": "119537304:AAFZfSx6OdeJMKpSGs_gI0ZuuXik2KwyGHo",
     "heroku_url": "https://radiant-everglades-3816.herokuapp.com",
 
     # telegram
-    "telegram_bot_url": "https://api.telegram.org/bot",
-    "telegram_token": "<here your bot token>",
+    "telegram_bot_url": "https://api.telegram.org/diletantrssbetabot",
+    "telegram_token": "119537304:AAFZfSx6OdeJMKpSGs_gI0ZuuXik2KwyGHo
+",
 
     # app
     "type": "rss",
