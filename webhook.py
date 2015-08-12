@@ -1,37 +1,60 @@
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
+
+# botan аналитика
+# лендинг
+# проблемы с клавиатурами
+# обработка команд
 
 import os
-from bot import Bot
-from bottle import run, request, post
+import logging
 from config import config
-from db import insert_chat, get_random_post, is_active
+from bottle import run, request, post
+from bot import Bot
+from chat import Chat, ConfigurationStatus
+
+from db import configure_chat
 
 bot = Bot()
 
 @post("/")
 def subscribe():
-	# todo: error handler
-	chat_id = request.json['message']['chat']['id']
-	is_added = insert_chat(chat_id)
-
 	try:
-		command_text = parse_command(request.json['message']['text'])
-		bot.execute(command_text, chat_id)
-		return;
+		message = unicode(request.json['message']['text'])
+		chat_id = request.json['message']['chat']['id']
+		date = request.json['message']['date']
+		process(chat_id, message, date);
 	except KeyError:
-		print "Nothing to command"
+		print "Nothing to send"
 
-	if is_active(chat_id) == True:
-		if is_added == True:
-			bot.send_message(chat_id, str(config.get("hello_message")))
+def process(chat_id, message, date):
+	chat = Chat(chat_id)
+	if chat.is_exist() == False:
+		chat.create()
+		bot.send_message(chat_id, str(config.get("hello_message")), [['Поток'],['Дайджест']] );
+	else:
+		if chat.is_configure() == False:
+			if message == "Отмена".decode('utf8'):
+				configure_chat(chat_id)
+				return;
+
+			status = chat.configure(message, date)
+			if status == ConfigurationStatus.DigestActivated:
+				bot.send_message(chat_id, "Как часто вы хотите получать новости?", [['Ежедневно'],['Еженедельно']]);
+			if status == ConfigurationStatus.WeeklyDigestActivated:
+				bot.send_message(chat_id, "Выберите день недели, когда вы хотите получать новости", [config.get("days")]);
+			if status == ConfigurationStatus.DailyDigestActivated:
+				bot.send_message(chat_id, "Выберите час, в который хотите получать новости. Просто напишите цифру от 0 до 23");
+			if status == ConfigurationStatus.Complete:
+				bot.send_message(chat_id, "Бот настроен");
 		else:
-			bot.send_message(chat_id, "Вот тебе баян:\n" + get_random_post()) 
+			try:
+				command = bot.decode_command(message)
+				words = message.split()
+				arg = "" if len(words) <= 1 else words[1]
+				bot.execute(command, chat_id, arg)
+			except KeyError:
+				print "Nothing to command"
 
-def parse_command(text):
-	if text.find( str(config.get("activate_command")) ) != -1: 
-		return str(config.get("activate_command"))
-	if text.find( str(config.get("deactivate_command")) ) != -1: 
-		return str(config.get("deactivate_command"))
-	raise KeyError('Commands not found')
+	return chat
 
 run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
