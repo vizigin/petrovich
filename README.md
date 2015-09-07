@@ -28,4 +28,3 @@ Also you should schedule (I using Heroku Scheduler) VK parser for broadcast post
 This repo used by: 
 * [Banekbot](http://telegram.me/banekbot). Bot for VK [public](https://vk.com/baneks)
 * [SMMRussiabot](http://telegram.me/smmrussiabot). Bot for RSS [site](http://siliconrus.com)
-* [iGuidesbot](https://telegram.me/iguidesbot). Bot for RSS [site](https://www.iguides.ru/)
