@@ -25,7 +25,7 @@ class Bot:
 
 	def configure(self):
 		#r = requests.get( telegram_bot_url + telegram_token + "/setWebhook", params={'url': heroku_url} )
-		#create()
+		#сreate()
 		current_date = time.time()
 		insert_digest_date(current_date)
 
@@ -52,6 +52,7 @@ class Bot:
 		raise KeyError('Command not found')
 		
 	def broadcast_message(self, chat_id, text, keys=[]):
+		text = text[0:2000] if len(text) > 2000 else text
 		params = {'chat_id': chat_id, 'text': text, 'reply_markup': json.dumps({"keyboard":keys, 'one_time_keyboard':True})}
 		r = requests.get( telegram_bot_url + telegram_token + "/sendMessage", params=params )
 		print r

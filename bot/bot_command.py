@@ -77,29 +77,39 @@ class SubscribeCommand(BotCommand):
 
 		channel = args[0] if (len(channels) > 1) else channels[0]["name"]
 		command = args[1] if (len(channels) > 1) else args[0]
-		if command == Status.Stop:
+		
+		print channel
+		if command == Type.Stop:
 			try:
-				result = c.unsubscribe(channel, Type.Subscription)
-				result = c.unsubscribe(channel, Type.Digest)
-				message = str(config.get("stop_message")) if result == True else str(config.get("stop_error"))
+				c.unsubscribe_all(channel)
+				message = str(config.get("stop_message"))
 				self.bot.broadcast_message(id, message)
 			except NameError:
 				self.bot.broadcast_message(id, str(config.get("doesntexist_message")))
 			return
 
-		if command == Status.Auto:
+		if command == Type.Auto:
 			try:
-				result = c.subscribe(channel, Type.Subscription)
-				message = str(config.get("auto_message")) if result == True else str(config.get("auto_error"))
+				c.subscribe(channel, Type.Auto)
+				message = str(config.get("auto_message"))
 				self.bot.broadcast_message(id, message)
 			except NameError:
 				self.bot.broadcast_message(id, str(config.get("doesntexist_message")))
 			return
 
-		if command == Status.Digest:
+		if command == Type.Hourly:
 			try:
-				result = c.subscribe(channel, Type.Digest)
-				message = str(config.get("digest_message")) if result == True else str(config.get("digest_error"))
+				c.subscribe(channel, Type.Hourly)
+				message = str(config.get("hourly_message"))
+				self.bot.broadcast_message(id, message)
+			except NameError:
+				self.bot.broadcast_message(id, str(config.get("doesntexist_message")))
+			return
+
+		if command == Type.Daily:
+			try:
+				c.subscribe(channel, Type.Daily)
+				message = str(config.get("daily_message"))
 				self.bot.broadcast_message(id, message)
 			except NameError:
 				self.bot.broadcast_message(id, str(config.get("doesntexist_message")))

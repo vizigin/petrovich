@@ -31,7 +31,7 @@ def process(chat_id, message, date):
 		chat.create()
 		channels = config.get("channels");
 		for channel in channels:
-			chat.subscribe(channel["name"], Type.Subscription)
+			chat.subscribe(channel["name"], Type.Auto)
 		bot.broadcast_message(chat_id, str(config.get("hello_message")));
 		return;
 	try:

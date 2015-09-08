@@ -28,9 +28,8 @@ config = {
     "auto_message": "Subscribed",
     "auto_error": "Already subscribed",
     "stop_message": "Unsubscribed",
-    "stop_error": "Already unsubscribed",
-    "digest_message": "Digest subscribed",
-    "digest_error": "Already subscribed",
+    "hourly_message": "Hourly subscribed",
+    "daily_message": "Daily subscribed",
     "msk_time_digest": "20", 
 
     "subscribe_message": "<SUBSCRIBED MESSAGE>",

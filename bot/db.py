@@ -27,8 +27,8 @@ def create():
 	c.cursor().execute("CREATE SEQUENCE posts_id_seq START 1")
 	c.cursor().execute("CREATE TABLE public.posts (id   bigint   NOT NULL   PRIMARY KEY DEFAULT nextval('posts_id_seq'), external_post_id   bigint   NOT NULL   UNIQUE, text TEXT, date timestamp, type TEXT)")
 	c.cursor().execute("CREATE SEQUENCE chats_id_seq START 1")
-	c.cursor().execute("CREATE TABLE public.chats (id   integer   NOT NULL   PRIMARY KEY DEFAULT nextval('chats_id_seq'), telegram_chat_id   integer   NOT NULL   UNIQUE, subscription TEXT DEFAULT '', digest TEXT DEFAULT '')")
-	c.cursor().execute("CREATE TABLE public.digest_time (digest_date timestamp)")
+	c.cursor().execute("CREATE TABLE public.chats (id   integer   NOT NULL   PRIMARY KEY DEFAULT nextval('chats_id_seq'), telegram_chat_id   integer   NOT NULL   UNIQUE, auto TEXT DEFAULT '', daily TEXT DEFAULT '', hourly TEXT DEFAULT '')")
+	c.cursor().execute("CREATE TABLE public.digest_time (daily timestamp, hourly timestamp)")
 	c.commit()
 	c.close()
 
@@ -90,7 +90,7 @@ def get_last_posts(post_type):
 	c.close()
 	return posts
 
-def get_posts_last_24_hour(end_date):
+def get_posts_between_dates(start_date, end_date):
 	start_date = end_date - timedelta(hours=24)
 	c = connect()
 	cursor = c.cursor()
@@ -99,6 +99,8 @@ def get_posts_last_24_hour(end_date):
 	c.close()
 	return posts
 
+
+
 #
 #	  DIGEST
 #
@@ -106,31 +108,34 @@ def get_digest_date():
 	c = connect()
 	cursor = c.cursor()
 	cursor.execute("SELECT * FROM digest_time")
-	time = cursor.fetchone()[0]
+	time = cursor.fetchone()
 	c.close()
 	return time
 
-def insert_digest_date(date):
-	date = datetime.datetime.fromtimestamp(int(date))
-	digest_date = date.replace(minute=0, second=0)
-		
-	hour = int(config.get("msk_time_digest"))
-	hour = MIN_DAY_BOUND if (hour < MIN_DAY_BOUND) else hour
-	hour = MAX_DAY_BOUND if (hour > MAX_DAY_BOUND) else hour
-	digest_date = digest_date.replace(hour=hour)
-	digest_date = digest_date - timedelta(hours=GMT_MOSCOW)
-
-	if digest_date < date:
-		digest_date = digest_date + datetime.timedelta(days=1)
-	print digest_date.strftime('%d-%m-%Y %H:%M:%S')
+def set_digest_date(date, type):
 	c = connect()
-	c.cursor().execute("INSERT INTO digest_time(digest_date) VALUES(to_timestamp(%s, 'dd-mm-yyyy hh24:mi:ss'))", (digest_date.strftime('%d-%m-%Y %H:%M:%S'),))
+	c.cursor().execute("UPDATE digest_time SET " + type + "=to_timestamp(%s, 'dd-mm-yyyy hh24:mi:ss')", (date.strftime('%d-%m-%Y %H:%M:%S'), ))
 	c.commit()
 	c.close()
 
-def set_digest_date(date):
+def insert_digest_date(date):
+	date = datetime.datetime.fromtimestamp(int(date))
+	daily = date.replace(minute=0, second=0)
+	hourly = date.replace(minute=0, second=0)
+
+	hour = int(config.get("msk_time_digest"))
+	hour = MIN_DAY_BOUND if (hour < MIN_DAY_BOUND) else hour
+	hour = MAX_DAY_BOUND if (hour > MAX_DAY_BOUND) else hour
+	daily = daily.replace(hour=hour)
+	daily = daily - timedelta(hours=GMT_MOSCOW)
+
+	if daily < date:
+		daily = daily + datetime.timedelta(days=1)
+	
+	print daily.strftime('%d-%m-%Y %H:%M:%S')
+
 	c = connect()
-	c.cursor().execute("UPDATE digest_time SET digest_date=to_timestamp(%s, 'dd-mm-yyyy hh24:mi:ss')", (date.strftime('%d-%m-%Y %H:%M:%S'),))
+	c.cursor().execute("INSERT INTO digest_time(daily, hourly) VALUES(to_timestamp(%s, 'dd-mm-yyyy hh24:mi:ss'), to_timestamp(%s, 'dd-mm-yyyy hh24:mi:ss'))", (daily.strftime('%d-%m-%Y %H:%M:%S'),hourly.strftime('%d-%m-%Y %H:%M:%S')))
 	c.commit()
 	c.close()
 
@@ -159,10 +164,18 @@ def delete_chat(id):
 	c.close()
 	return True
 
-def get_digest_chats():
+def get_daily_chats():
 	c = connect()
 	cursor = c.cursor()
-	cursor.execute("SELECT digest, telegram_chat_id FROM chats")
+	cursor.execute("SELECT daily, telegram_chat_id FROM chats")
+	chats = cursor.fetchall()
+	c.close()
+	return chats
+
+def get_hourly_chats():
+	c = connect()
+	cursor = c.cursor()
+	cursor.execute("SELECT hourly, telegram_chat_id FROM chats")
 	chats = cursor.fetchall()
 	c.close()
 	return chats
@@ -170,7 +183,7 @@ def get_digest_chats():
 def get_subscripted_chats(channel):
 	c = connect()
 	cursor = c.cursor()
-	cursor.execute("SELECT telegram_chat_id, subscription FROM chats")
+	cursor.execute("SELECT telegram_chat_id, auto FROM chats")
 	chats = cursor.fetchall()
 	c.close()
 	subscripted_chats = []
@@ -216,6 +229,16 @@ def unsubscribe_chat(id, channel, subscription_type):
 	c.commit()
 	c.close()
 	return True
+
+def get_chat_subscriptions(id, subscription_type):
+	c = connect()
+	cursor = c.cursor()
+	cursor.execute("SELECT " + subscription_type + " FROM chats WHERE telegram_chat_id=%s", [id])
+	c.commit()
+	subscriptions = cursor.fetchone()[0]
+	channels = subscriptions.split(',') if len(subscriptions) > 0 else []
+	c.close()
+	return channels
 
 def get_chat_subscriptions(id, subscription_type):
 	c = connect()

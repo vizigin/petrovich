@@ -5,19 +5,11 @@ from db import *
 from enum import Enum
 from datetime import date, timedelta
 
-MAX_DAY_BOUND = 23
-MIN_DAY_BOUND = 0
-DAYS_IN_WEEK = 7
-GMT_MOSCOW = 3
-
-class Status(Enum):
+class Type(Enum):
 	Stop = "stop"
 	Auto = "auto"
-	Digest = "digest"
-
-class Type(Enum):
-	Subscription = "subscription"
-	Digest = "digest"
+	Daily = "daily"
+	Hourly = "hourly"
 
 class Chat:
 	def __init__(self, chat_id):
@@ -38,14 +30,17 @@ class Chat:
 		return is_chat_exist(self.chat_id)
 
 	def subscribe(self, channel, subscription_type):
-		unsubscription_type = Type.Subscription if subscription_type == Type.Digest else Type.Digest
-		self.unsubscribe(channel, unsubscription_type)
-
+		self.unsubscribe_all(channel);
 		channels = config.get("channels");
 		for c in channels:
 			if c['name'] == channel:
 				return subscribe_chat(self.chat_id, channel, subscription_type)
 		raise NameError('Такого канала не существует: ' + channel)
+
+	def unsubscribe_all(self, channel):
+		self.unsubscribe(channel, Type.Auto)
+		self.unsubscribe(channel, Type.Hourly)
+		self.unsubscribe(channel, Type.Daily)
 
 	def unsubscribe(self, channel, subscription_type):
 		channels = config.get("channels");
@@ -58,9 +53,10 @@ class Chat:
 		return get_chat_subscriptions(self.chat_id, subscription_type)
 
 	def get_full_status(self):
-		subscriptions = "Подписка: " + self.get_status(Type.Subscription)
-		digest = "Дайджест: " + self.get_status(Type.Digest)
-		return subscriptions + "\n" + digest
+		auto = "Подписка: " + self.get_status(Type.Auto)
+		daily = "Раз в день: " + self.get_status(Type.Daily)
+		hourly = "Раз в час: " + self.get_status(Type.Hourly)
+		return auto + "\n" + daily + "\n" + hourly
 
 	def get_status(self, subscription_type):
 		subscriptions = self.get_subscriptions(subscription_type)
