@@ -12,6 +12,9 @@ Now bot supports sending text message from RSS and VK groups only.
 6. For broadcast message from your VK public just run `python parser.py`. It retrieves 20 post and sends it to all user of Heroku database
 7. That's it!
 
+### Yandex. Metrika
+Bot using [botan.io](http://botan.io) for collecting statistic.
+
 ### Heroku
 You can host your Bot for free on [Heroku](http://heroku.com). It is ready to deploy.
 
