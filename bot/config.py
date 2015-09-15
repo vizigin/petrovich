@@ -2,12 +2,12 @@
 
 config = {
     # heroku
-    "heroku_postgres_key": "<here your postgres token>",
-    "heroku_url": "https://upper-syrup-2282.herokuapp.com",
+    "heroku_postgres_key": "<here your postgres url>",
+    "heroku_url": "<heroku url>",
 
     # telegram
     "telegram_bot_url": "https://api.telegram.org/bot",
-    "telegram_token": "<here your bot token>",
+    "telegram_token": "<telegram bot token>",
 
     # app
     "type": "vk",
@@ -20,11 +20,18 @@ config = {
         "/last", 
         "/search", 
         "/random",
-        "/subscribe",
+        "/off",
+        "/on",
+        "/daily",
+        "/hourly",
         "/help"
         ],
+
+    #yandex. metrika
+    "ya_token": "<Yandex.Metrika code>",
    
     "doesntexist_message": "Channel doesn't exist",
+    "report": "Report header",
     "auto_message": "Subscribed",
     "auto_error": "Already subscribed",
     "stop_message": "Unsubscribed",
@@ -34,6 +41,5 @@ config = {
 
     "subscribe_message": "<SUBSCRIBED MESSAGE>",
     "last_message": "<LAST MESSAGE>",
-    "hello_message": "<HELLO MESSAGE>",
-    "help_message": "<HELP MESSAGE>"
+    "hello_message": "<HELLO MESSAGE>"
 }

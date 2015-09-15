@@ -20,12 +20,15 @@ class Bot:
 		self.commands.append( LastCommand(self, str(config.get("commands")[0])) )
 		self.commands.append( SearchCommand(self, str(config.get("commands")[1])) )
 		self.commands.append( RandomCommand(self, str(config.get("commands")[2])) )
-		self.commands.append( SubscribeCommand(self, str(config.get("commands")[3])) )
-		self.commands.append( HelpCommand(self, str(config.get("commands")[4])) )
+		self.commands.append( SubscribeStopCommand(self, str(config.get("commands")[3])) )
+		self.commands.append( SubscribeAutoCommand(self, str(config.get("commands")[4])) )
+		self.commands.append( SubscribeDailyCommand(self, str(config.get("commands")[5])) )
+		self.commands.append( SubscribeHourlyCommand(self, str(config.get("commands")[6])) )
+		self.commands.append( HelpCommand(self, str(config.get("commands")[7])) )
 
 	def configure(self):
-		#r = requests.get( telegram_bot_url + telegram_token + "/setWebhook", params={'url': heroku_url} )
-		#сreate()
+		r = requests.get( telegram_bot_url + telegram_token + "/setWebhook", params={'url': heroku_url} )
+		create()
 		current_date = time.time()
 		insert_digest_date(current_date)
 
@@ -55,11 +58,9 @@ class Bot:
 		text = text[0:2000] if len(text) > 2000 else text
 		params = {'chat_id': chat_id, 'text': text, 'reply_markup': json.dumps({"keyboard":keys, 'one_time_keyboard':True})}
 		r = requests.get( telegram_bot_url + telegram_token + "/sendMessage", params=params )
-		print r
 		return r.json()["ok"]			
 
 	def broadcast_post(self, post, channel):
 		chats = get_subscripted_chats(channel)
 		for chat in chats:
 			self.broadcast_message(chat, post["text"])
-			time.sleep(5)

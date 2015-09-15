@@ -1,8 +1,4 @@
 #-*- coding: utf-8 -*-
-
-# botan аналитика
-# sql injection
-
 from bottle import run, request, post
 from config import config
 from chat import Chat, Type
@@ -34,6 +30,7 @@ def process(chat_id, message, date):
 			chat.subscribe(channel["name"], Type.Auto)
 		bot.broadcast_message(chat_id, str(config.get("hello_message")));
 		return;
+		
 	try:
 		command = bot.decode_command(message)
 		args = message.split()

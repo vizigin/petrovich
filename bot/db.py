@@ -91,7 +91,6 @@ def get_last_posts(post_type):
 	return posts
 
 def get_posts_between_dates(start_date, end_date):
-	start_date = end_date - timedelta(hours=24)
 	c = connect()
 	cursor = c.cursor()
 	cursor.execute("SELECT type, text FROM posts WHERE date BETWEEN to_timestamp(%s, 'dd-mm-yyyy hh24:mi:ss')::timestamp AND to_timestamp(%s, 'dd-mm-yyyy hh24:mi:ss')::timestamp", (start_date.strftime('%d-%m-%Y %H:%M:%S'), end_date.strftime('%d-%m-%Y %H:%M:%S')))

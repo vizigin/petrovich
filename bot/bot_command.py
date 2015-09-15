@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 from chat import *
 import time
+import botan
 
 class BotCommand:
 	def __init__(self, bot, name):
@@ -11,7 +12,8 @@ class HelpCommand(BotCommand):
 		BotCommand.__init__(self, bot, name)
 		self.bot = bot
 	def run(self, id, args, message_date):
-		self.bot.broadcast_message(id, str(config.get("help_message")))
+		self.bot.broadcast_message(id, str(config.get("hello_message")))
+		botan.track(str(config.get("ya_token")), id, {}, 'HelpCommand')
 
 class RandomCommand(BotCommand):
 	def __init__(self, bot, name):
@@ -19,6 +21,7 @@ class RandomCommand(BotCommand):
 		self.bot = bot
 	def run(self, id, args, message_date):
 		self.bot.broadcast_message(id, str(get_random_post()))
+		botan.track(str(config.get("ya_token")), id, {}, 'RandomCommand')
 
 class SearchCommand(BotCommand):
 	def __init__(self, bot, name):
@@ -33,6 +36,7 @@ class SearchCommand(BotCommand):
 				message += post_text[0] + "\n\n"
 			message = "Постов не найдено" if message == "" else message
 			self.bot.broadcast_message(id, message)
+			botan.track(str(config.get("ya_token")), id, {}, 'SearchCommand')
 
 class LastCommand(BotCommand):
 	def __init__(self, bot, name):
@@ -42,8 +46,8 @@ class LastCommand(BotCommand):
 		channels = config.get("channels");
 		if len(channels) == 1:
 			self.send_last_posts(id, channels[0]["name"])
+			botan.track(str(config.get("ya_token")), id, {}, 'LastCommand')
 			return;
-
 		if (len(args) > 0):
 			post_type = str(args[0])
 			for c in channels:
@@ -53,6 +57,7 @@ class LastCommand(BotCommand):
 			self.bot.broadcast_message(id, str(config.get("doesntexist_message")))
 		else:
 			self.bot.broadcast_message(id, str(config.get("last_message")))
+			botan.track(str(config.get("ya_token")), id, {}, 'LastCommand')
 	def send_last_posts(self, id, channel):
 		message = ""
 		post_texts = get_last_posts(channel)
@@ -64,53 +69,68 @@ class SubscribeCommand(BotCommand):
 	def __init__(self, bot, name):
 		BotCommand.__init__(self, bot, name)
 		self.bot = bot
-	def run(self, id, args, message_date):
+	def check_status(self, id, args):
 		c = Chat(id)
 		channels = config.get("channels");
 		min_args = 1 if (len(channels) > 1) else 0
-
-		# STATUS
-		if (len(args) <= min_args):
+		if (len(args) < min_args):
 			status = "Текущие подписки:\n" + c.get_full_status()
 			self.bot.broadcast_message(id, str(config.get("subscribe_message")) + "\n\n" + status)
-			return;
+			return True;
+		return False;
+	def subscribe(self, id, channel, subscription_type, message):
+		c = Chat(id)
+		try:
+			print channel, subscription_type
+			c.subscribe(channel, subscription_type)
+			self.bot.broadcast_message(id, message)
+		except NameError:
+			self.bot.broadcast_message(id, str(config.get("doesntexist_message")))
 
-		channel = args[0] if (len(channels) > 1) else channels[0]["name"]
-		command = args[1] if (len(channels) > 1) else args[0]
-		
-		print channel
-		if command == Type.Stop:
+
+class SubscribeStopCommand(SubscribeCommand):
+	def __init__(self, bot, name):
+		BotCommand.__init__(self, bot, name)
+		self.bot = bot
+	def run(self, id, args, message_date):
+		if self.check_status(id, args) == False:
+			c = Chat(id)
+			botan.track(str(config.get("ya_token")), id, {}, 'SubscribeStopCommand')
+			channels = config.get("channels");
+			channel = args[0] if (len(channels) > 1) else channels[0]["name"]
 			try:
 				c.unsubscribe_all(channel)
 				message = str(config.get("stop_message"))
 				self.bot.broadcast_message(id, message)
 			except NameError:
 				self.bot.broadcast_message(id, str(config.get("doesntexist_message")))
-			return
 
-		if command == Type.Auto:
-			try:
-				c.subscribe(channel, Type.Auto)
-				message = str(config.get("auto_message"))
-				self.bot.broadcast_message(id, message)
-			except NameError:
-				self.bot.broadcast_message(id, str(config.get("doesntexist_message")))
-			return
+class SubscribeDailyCommand(SubscribeCommand):
+	def __init__(self, bot, name):
+		SubscribeCommand.__init__(self, bot, name)
+	def run(self, id, args, message_date):
+		if self.check_status(id, args) == False:
+			botan.track(str(config.get("ya_token")), id, {}, 'SubscribeDailyCommand')
+			channels = config.get("channels");
+			channel = args[0] if (len(channels) > 1) else channels[0]["name"]
+			self.subscribe(id, channel, Type.Daily, str(config.get("daily_message")))
 
-		if command == Type.Hourly:
-			try:
-				c.subscribe(channel, Type.Hourly)
-				message = str(config.get("hourly_message"))
-				self.bot.broadcast_message(id, message)
-			except NameError:
-				self.bot.broadcast_message(id, str(config.get("doesntexist_message")))
-			return
+class SubscribeHourlyCommand(SubscribeCommand):
+	def __init__(self, bot, name):
+		SubscribeCommand.__init__(self, bot, name)
+	def run(self, id, args, message_date):
+		if self.check_status(id, args) == False:
+			botan.track(str(config.get("ya_token")), id, {}, 'SubscribeHourlyCommand')
+			channels = config.get("channels");
+			channel = args[0] if (len(channels) > 1) else channels[0]["name"]
+			self.subscribe(id, channel, Type.Hourly, str(config.get("hourly_message")))
 
-		if command == Type.Daily:
-			try:
-				c.subscribe(channel, Type.Daily)
-				message = str(config.get("daily_message"))
-				self.bot.broadcast_message(id, message)
-			except NameError:
-				self.bot.broadcast_message(id, str(config.get("doesntexist_message")))
-			return
+class SubscribeAutoCommand(SubscribeCommand):
+	def __init__(self, bot, name):
+		SubscribeCommand.__init__(self, bot, name)
+	def run(self, id, args, message_date):
+		if self.check_status(id, args) == False:
+			botan.track(str(config.get("ya_token")), id, {}, 'SubscribeAutoCommand')
+			channels = config.get("channels");
+			channel = args[0] if (len(channels) > 1) else channels[0]["name"]
+			self.subscribe(id, channel, Type.Auto, str(config.get("auto_message")))

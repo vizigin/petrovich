@@ -61,7 +61,7 @@ class RSSParser(Parser):
 				link = post["link"]
 				url = urlparse.urlparse(link)
 				description = re.compile(r'<.*?>').sub('', post["yandex_full-text"])
-				text = title + "\n" + (url.netloc + url.path + "?from=bot")
+				text = title + "\n" + ("http://" + url.netloc + url.path + "?from=bot")
 				self.parsed_posts.append( {"id":''.join([i for i in link if i.isdigit()]), "text":text} )
 				n_posts += 1
 				if n_posts == MAX_POSTS:
@@ -82,7 +82,7 @@ class RSSParser(Parser):
 				guid = post["guid"]
 				url = urlparse.urlparse(link)
 				description = re.compile(r'<.*?>').sub('', post["description"])
-				text = title + "\n\n" + (url.netloc + url.path + "?from=bot")
+				text = title + "\n" + ("http://" + url.netloc + url.path + "?from=bot")
 				self.parsed_posts.append( {"id":''.join([i for i in guid if i.isdigit()]), "text":text} )
 				n_posts += 1
 				if n_posts == MAX_POSTS:
@@ -103,7 +103,7 @@ class RSSParser(Parser):
 				link = post["link"]
 				url = urlparse.urlparse(link)
 				description = re.compile(r'<.*?>').sub('', post["description"])
-				text = title + "\n\n" + (url.netloc + url.path + "?from=bot")
+				text = title + "\n" + ("http://" + url.netloc + url.path + "?from=bot")
 				print ''.join([i for i in link if i.isdigit()])
 				self.parsed_posts.append( {"id":''.join([i for i in link if i.isdigit()]), "text":text} )
 				n_posts += 1
@@ -121,16 +121,18 @@ def broadcast_digest(posts, chats):
 		post_feed = ""
 		for post in posts:
 			if post[0] == channel['name']:
-				post_feed += post[1] + "\n"
+				post_feed += post[1] + "\n\n"
 		feeds.append({"name":channel['name'], "text":post_feed})
 
 	# send messages
-	for chat in chats:
-		digest_channels = chat[0].split(',') if len(chat[0]) > 0 else []
-		for digest_channel in digest_channels:
-			for feed in feeds:
-				if feed["name"] == digest_channel:
-					bot.broadcast_message(int(chat[1]), "Сводка новостей по рубрике за день:\n" + feed["text"])
+	if len(feeds) > 0:
+		for chat in chats:
+			digest_channels = chat[0].split(',') if len(chat[0]) > 0 else []
+			for digest_channel in digest_channels:
+				for feed in feeds:
+					if feed["name"] == digest_channel:
+						if len(feed["text"]) > 0:
+							bot.broadcast_message(int(chat[1]), str(config.get("report")) + ":\n" + feed["text"])
 
 bot = Bot()
 parser = RSSParser() if parse_type =="rss" else VKParser()
@@ -165,4 +167,3 @@ if (current_date > digest_date):
 	broadcast_digest(posts, chats)
 	digest_date = digest_date + timedelta(hours=1)
 	set_digest_date(digest_date, "hourly")
-

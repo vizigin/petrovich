@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 import logging
 import config
+import botan
 from db import * 
 from enum import Enum
 from datetime import date, timedelta
@@ -20,7 +21,7 @@ class Chat:
 			logging.info("Chat already exist")
 			return False
 		insert_chat(self.chat_id)
-		logging.info("Chat created")
+		botan.track(str(config.get("ya_token")), self.chat_id, {}, 'CreateUser')
 		return True
 
 	def remove(self):
@@ -35,7 +36,7 @@ class Chat:
 		for c in channels:
 			if c['name'] == channel:
 				return subscribe_chat(self.chat_id, channel, subscription_type)
-		raise NameError('Такого канала не существует: ' + channel)
+		raise NameError('Такой рубрики не существует: ' + channel)
 
 	def unsubscribe_all(self, channel):
 		self.unsubscribe(channel, Type.Auto)
@@ -47,7 +48,7 @@ class Chat:
 		for c in channels:
 			if c['name'] == channel and c['forced'] == False:
 				return unsubscribe_chat(self.chat_id, channel, subscription_type)
-		raise NameError('Такого канала не существует: ' + channel)
+		raise NameError('Такого рубрики не существует: ' + str(channel))
 
 	def get_subscriptions(self, subscription_type):
 		return get_chat_subscriptions(self.chat_id, subscription_type)
