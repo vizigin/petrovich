@@ -64,3 +64,9 @@ class Bot:
 		chats = get_subscripted_chats(channel)
 		for chat in chats:
 			self.broadcast_message(chat, post["text"])
+			
+#
+# For first start uncomment this:
+#
+# b = Bot()
+# b.configure()
