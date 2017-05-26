@@ -1,7 +1,3 @@
-<p align="center" >
-  <img src="logo.jpg" title="Petrovich logo" float=left>
-</p>
-
 # Telegram Bot Petrovich
 #### Petrovich. Radosti skupyye telegrammy
 A [Telegram](https://telegram.org/) bot running with RSS and VK group integration and ready to deploy with Heroku.
@@ -30,8 +26,10 @@ A [Telegram](https://telegram.org/) bot running with RSS and VK group integratio
 8. That's it!
 
 ### This repo used by: 
-* [Banekbot](http://telegram.me/banekbot). Bot for VK [public](https://vk.com/baneks)
-* [SMMRussiabot](http://telegram.me/smmrussiabot). Bot for RSS [site](http://siliconrus.com)
-* [EchoMSK](https://telegram.me/echom_bot). Bot for RSS [site](http://echo.msk.ru/)
-* [Diletant](https://telegram.me/diletant_bot). Bot for RSS [site](http://diletant.media/)
-* [iGuides](https://telegram.me/iGuidesBot). Bot for RSS [site](iguides.ru)
+
+<p align="center" >
+  <a href="http://telegram.me/banekbot"><img src="http://dvizigin.myjino.ru/img/petrovich/banek_logo_150.png" title="АКБ" float=left></a>
+  <a href="http://telegram.me/diletant_bot"><img src="http://dvizigin.myjino.ru/img/petrovich/diletant_logo_150.png" title="diletant.media" float=left></a>
+  <a href="http://telegram.me/echom_bot"><img src="http://dvizigin.myjino.ru/img/petrovich/echomsk_logo_150.png" title="Эхо Москвы" float=left></a>
+  <a href="http://telegram.me/smmrussiabot"><img src="http://dvizigin.myjino.ru/img/petrovich/vcru_logo_150.png" title="VC.RU" float=left></a>
+</p>
