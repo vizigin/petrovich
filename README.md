@@ -4,7 +4,7 @@ A [Telegram](https://telegram.org/) bot running with RSS and VK group integratio
 Now bot supports sending text message from RSS and VK groups only.
 
 ### Installation
-1. Clone this repo
+1. Clone this repo or [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/vizigin/petrovich)
 2. `pip install -r requirements.txt`
 3. Create the bot on Telegram (just say `/newbot` to [BotFather](https://core.telegram.org/bots#botfather))
 4. Update `config.py` with your information (tokens, keys, etc)
@@ -31,3 +31,6 @@ Also you should schedule (I using Heroku Scheduler) VK parser for broadcast post
 This repo used by: 
 * [Banekbot](http://telegram.me/banekbot). Bot for VK [public](https://vk.com/baneks)
 * [SMMRussiabot](http://telegram.me/smmrussiabot). Bot for RSS [site](http://siliconrus.com)
+* [EchoMSK](https://telegram.me/echom_bot). Bot for RSS [site](http://echo.msk.ru/)
+* [Diletant](https://telegram.me/diletant_bot). Bot for RSS [site](http://diletant.media/)
+* [iGuides](https://telegram.me/iGuidesBot). Bot for RSS [site](iguides.ru)

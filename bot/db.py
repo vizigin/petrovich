@@ -27,7 +27,7 @@ def create():
 	c.cursor().execute("CREATE SEQUENCE posts_id_seq START 1")
 	c.cursor().execute("CREATE TABLE public.posts (id   bigint   NOT NULL   PRIMARY KEY DEFAULT nextval('posts_id_seq'), external_post_id   bigint   NOT NULL   UNIQUE, text TEXT, date timestamp, type TEXT)")
 	c.cursor().execute("CREATE SEQUENCE chats_id_seq START 1")
-	c.cursor().execute("CREATE TABLE public.chats (id   integer   NOT NULL   PRIMARY KEY DEFAULT nextval('chats_id_seq'), telegram_chat_id   integer   NOT NULL   UNIQUE, auto TEXT DEFAULT '', daily TEXT DEFAULT '', hourly TEXT DEFAULT '')")
+	c.cursor().execute("CREATE TABLE public.chats (id   bigint   NOT NULL   PRIMARY KEY DEFAULT nextval('chats_id_seq'), telegram_chat_id   bigint   NOT NULL   UNIQUE, auto TEXT DEFAULT '', daily TEXT DEFAULT '', hourly TEXT DEFAULT '')")
 	c.cursor().execute("CREATE TABLE public.digest_time (daily timestamp, hourly timestamp)")
 	c.commit()
 	c.close()
@@ -39,6 +39,19 @@ def clear():
 	c.cursor().execute("DROP TABLE public.digest_time")
 	c.cursor().execute("DROP SEQUENCE posts_id_seq")
 	c.cursor().execute("DROP SEQUENCE chats_id_seq")
+	c.commit()
+	c.close()
+
+def clear_cache():
+	c = connect()
+	c.cursor().execute("DROP TABLE public.posts")
+	c.cursor().execute("DROP SEQUENCE posts_id_seq")
+	c.commit()
+	c.close()
+
+	c = connect()
+	c.cursor().execute("CREATE SEQUENCE posts_id_seq START 1")
+	c.cursor().execute("CREATE TABLE public.posts (id   bigint   NOT NULL   PRIMARY KEY DEFAULT nextval('posts_id_seq'), external_post_id   bigint   NOT NULL   UNIQUE, text TEXT, date timestamp, type TEXT)")
 	c.commit()
 	c.close()
 
