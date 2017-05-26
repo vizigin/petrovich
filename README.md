@@ -3,17 +3,17 @@
 A [Telegram](https://telegram.org/) bot running with RSS and VK group integration and ready to deploy with Heroku.
 
 ### Features
-Bot support commands:
-`/last` - send to user last 5 posts 
-`/search %search_word%` - send all posts with `%search_word%`
-`/random` - send random post
-`/off` - turn off auto broadcasting
-`/on` - turn on auto broadcasting
-`/daily` - turn off daily broadcasting. You can set time in `config.py`
-`/hourly` - turn off hourly broadcasting.
-`/help` - just send help info
-Bot can work with multiply channels. For example `/last ege` retrieve 5 posts from `ege` channel
-Bot using [botan.io](http://botan.io) for **collecting statistic**.
+1. Bot support commands:
+* `/last` - send to user last 5 posts 
+* `/search %search_word%` - send all posts with `%search_word%`
+* `/random` - send random post
+* `/off` - turn off auto broadcasting
+* `/on` - turn on auto broadcasting
+* `/daily` - turn off daily broadcasting. You can set time in `config.py`
+* `/hourly` - turn off hourly broadcasting.
+* `/help` - just send help info
+2. Bot can work with multiply channels. For example `/last ege` retrieve 5 posts from `ege` channel
+3. Bot using [botan.io](http://botan.io) for collecting statistic.
 
 ### Installation
 1. [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/vizigin/petrovich)
