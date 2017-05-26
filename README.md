@@ -1,3 +1,7 @@
+<p align="center" >
+  <img src="logo.jpg" title="Petrovich logo" float=left>
+</p>
+
 # Telegram Bot Petrovich
 #### Petrovich. Radosti skupyye telegrammy
 A [Telegram](https://telegram.org/) bot running with RSS and VK group integration and ready to deploy with Heroku.
@@ -25,7 +29,7 @@ A [Telegram](https://telegram.org/) bot running with RSS and VK group integratio
 7. Schedule (I using Heroku Scheduler) VK parser for broadcast posts from your public to users and database cleaner for long support. I use `python ./bot/broadcaster.py` every 10 minutes for Brodcaster and `if [ "$(date +%d)" = 01 ]; then python ./bot/cache_cleaner.py; fi` for Database Cleaner
 8. That's it!
 
-This repo used by: 
+### This repo used by: 
 * [Banekbot](http://telegram.me/banekbot). Bot for VK [public](https://vk.com/baneks)
 * [SMMRussiabot](http://telegram.me/smmrussiabot). Bot for RSS [site](http://siliconrus.com)
 * [EchoMSK](https://telegram.me/echom_bot). Bot for RSS [site](http://echo.msk.ru/)
