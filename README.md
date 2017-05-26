@@ -32,5 +32,5 @@ A [Telegram](https://telegram.org/) bot running with RSS and VK group integratio
   <a href="http://telegram.me/diletant_bot"><img src="http://dvizigin.myjino.ru/img/petrovich/diletant_logo_150.png" title="diletant.media" float=left></a>
   <a href="http://telegram.me/echom_bot"><img src="http://dvizigin.myjino.ru/img/petrovich/echomsk_logo_150.png" title="Эхо Москвы" float=left></a>
   <a href="http://telegram.me/smmrussiabot"><img src="http://dvizigin.myjino.ru/img/petrovich/vcru_logo_150.png" title="VC.RU" float=left></a>
-  <a href="http://telegram.me/smmrussiabot"><img src="http://dvizigin.myjino.ru/img/petrovich/iguides_logo_150.png" title="iGuides" float=left></a>
+  <a href="http://telegram.me/iGuidesBot"><img src="http://dvizigin.myjino.ru/img/petrovich/iguides_logo_150.png" title="iGuides" float=left></a>
 </p>
