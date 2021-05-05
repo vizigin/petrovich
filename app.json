@@ -4,5 +4,5 @@
   "repository": "https://github.com/vizigin/petrovich",
   "logo": "https://static.tildacdn.com/tild6365-3666-4865-a262-313432646561/logo.jpg",
   "keywords": ["petrovich", "telegram", "bot"],
-  "addons": ["heroku-postgresql:hobby-dev", "scheduler:standart"]
+  "addons": ["heroku-postgresql:hobby-dev", "scheduler:standard"]
 }
