@@ -3,11 +3,11 @@
 config = {
     # heroku
     "heroku_postgres_key": "postgres://josdegmknehgev:fbe0f6a3d4659862376e8c3c7b8c3f99c5bf81ae4e0235feb58a162b895c7aeb@ec2-34-247-72-29.eu-west-1.compute.amazonaws.com:5432/d72nk3fl871u4c",
-    "heroku_url": "<heroku url>",
+    "heroku_url": "https://wldnr-vk-tg-bot.herokuapp.com/",
 
     # telegram
     "telegram_bot_url": "https://api.telegram.org/bot",
-    "telegram_token": "<telegram bot token>",
+    "telegram_token": "5546855722:AAGCPEUGQa4wiBrN0AGLMvPYVwhe37GxJ-I",
 
     # app
     "type": "vk",
