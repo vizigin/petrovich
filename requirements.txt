@@ -1,5 +1,5 @@
 feedparser==6.0.10
 requests==2.7.0
-psycopg2==2.7.1
+psycopg2==2.9.3
 bottle==0.12.23
 aenum==2.1.2
